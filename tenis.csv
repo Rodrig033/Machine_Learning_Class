@@ -1,0 +1,15 @@
+cielo,temperatura,humedad,viento,jugar-tenis
+soleado,calor,alta,debil,no
+soleado,calor,alta,fuerte,no
+nublado,calor,alta,debil,si
+lluvia,templado,alta,debil,si
+lluvia,frio,normal,debil,si
+lluvia,frio,normal,fuerte,no
+nublado,frio,normal,fuerte,si
+soleado,templado,alta,debil,no
+soleado,frio,normal,debil,si
+lluvia,templado,normal,debil,si
+soleado,templado,normal,fuerte,si
+nublado,templado,alta,fuerte,si
+nublado,calor,normal,debil,si
+lluvia,templado,alta,fuerte,no
