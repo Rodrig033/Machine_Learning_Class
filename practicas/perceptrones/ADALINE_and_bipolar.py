@@ -33,6 +33,4 @@ def perdida_por_epoca(lost):
     l = lost / 4
     print("La pérdida es: ", l)
     return l
-
-
         
