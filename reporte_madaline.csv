@@ -1,0 +1,20 @@
+Experimento,Valor,Acc train,Acc test,Pérdida final,¿Converge?,Época conv.
+1. Tasa de aprendizaje,0.0001,99.5%,91.2%,1.0159,Parcial (4/5),233
+1. Tasa de aprendizaje,0.001,100.0%,92.5%,1.0163,Sí (5/5),34
+1. Tasa de aprendizaje,0.01,100.0%,94.8%,1.0165,Sí (5/5),5
+1. Tasa de aprendizaje,0.05,100.0%,97.2%,1.0185,Sí (5/5),3
+1. Tasa de aprendizaje,0.1,100.0%,97.8%,1.0196,Sí (5/5),3
+1. Tasa de aprendizaje,0.5,100.0%,98.8%,2.2507,Sí (5/5),3
+2. Función de activación,lineal,100.0%,97.8%,1.0196,Sí (5/5),3
+2. Función de activación,tanh,100.0%,97.8%,0.9629,Sí (5/5),3
+2. Función de activación,sigmoide,100.0%,95.2%,0.9998,Sí (5/5),3
+2. Función de activación,relu,85.0%,85.0%,0.9850,Parcial (2/5),3
+2. Función de activación,leaky_relu,100.0%,98.8%,0.9772,Sí (5/5),29
+3. Pérdida,MSE,100.0%,97.8%,1.0196,Sí (5/5),3
+3. Pérdida,MAE,100.0%,97.0%,1.0007,Sí (5/5),3
+4. Inicialización,aleatoria,100.0%,97.8%,1.0196,Sí (5/5),3
+4. Inicialización,ceros,100.0%,98.0%,1.0133,Sí (5/5),2
+5. Épocas,100,100.0%,97.8%,1.0196,Sí (5/5),3
+5. Épocas,500,100.0%,97.8%,1.0196,Sí (5/5),3
+5. Épocas,1000,100.0%,97.8%,1.0196,Sí (5/5),3
+5. Épocas,3000,100.0%,97.8%,1.0196,Sí (5/5),3
