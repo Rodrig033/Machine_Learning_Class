@@ -68,4 +68,3 @@ print("Pesos finales:")
 print(modelo.pesos)
 print("Sesgos finales:")
 print(modelo.sesgos)
-
