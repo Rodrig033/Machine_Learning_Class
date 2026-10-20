@@ -145,7 +145,7 @@ if __name__ == "__main__":
     # Búsqueda de hiperparámetros
     rows = []
     grid = product([4, 8, 16], ["tanh", "relu", "sigmoide"], ["CE", "MSE"],
-                   [0.01, 0.1], [200, 500])
+                   [0.01, 0.1], [50, 50])
     for nh, act, loss, lr, ep in grid:
         out_act = "sigmoide" if loss == "MSE" else "lineal"   # ignorado con CE
         m = PracticalMLP(3, nh, lr, ep, act, out_act, loss, seed=0).fit(X_train, y_train)
