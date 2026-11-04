@@ -1,0 +1,23 @@
+{
+  "config": {
+    "n_layers": 3,
+    "n_neurons": 16,
+    "activation": "tanh",
+    "lr": 0.01,
+    "weight_decay": 0.0,
+    "dropout": 0.2,
+    "epochs": 300,
+    "batch_size": 32,
+    "patience": 30,
+    "restore_best": true
+  },
+  "acc_test_media": 0.645045030117035,
+  "acc_test_std": 0.010428695244852553,
+  "acc_test_por_semilla": [
+    0.6441441178321838,
+    0.630630612373352,
+    0.662162184715271,
+    0.6396396160125732,
+    0.6486486196517944
+  ]
+}
