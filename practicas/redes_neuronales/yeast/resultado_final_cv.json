@@ -1,0 +1,25 @@
+{
+  "ganador": "D: ensamble (\u00e9pocas fijas)",
+  "acc_test": 0.6441441441441441,
+  "acc_test_redes": [
+    0.6306306306306306,
+    0.6396396396396397,
+    0.6306306306306306,
+    0.6531531531531531,
+    0.6396396396396397
+  ],
+  "acc_test_ensamble": 0.6441441441441441,
+  "epocas_fijas": 31,
+  "config": {
+    "n_layers": 3,
+    "n_neurons": 16,
+    "activation": "tanh",
+    "lr": 0.01,
+    "weight_decay": 0.0,
+    "dropout": 0.2,
+    "epochs": 31,
+    "batch_size": 32,
+    "patience": null,
+    "restore_best": false
+  }
+}

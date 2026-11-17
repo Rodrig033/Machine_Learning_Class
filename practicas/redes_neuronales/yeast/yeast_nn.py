@@ -1,3 +1,16 @@
+"""Red neuronal (PyTorch) para clasificar la localización de proteínas del dataset Yeast.
+
+Etapas:
+  1. Búsqueda en rejilla de arquitectura/hiperparámetros (se elige con VALIDACIÓN).
+  2. Barridos de sensibilidad de un hiperparámetro a la vez, alrededor de la mejor
+     configuración (para la sección de Discusión del reporte).
+  3. Evaluación final en PRUEBA (una sola vez, con varias semillas).
+
+Uso:
+    python yeast_nn.py --quick            # prueba rápida (pocas configuraciones)
+    python yeast_nn.py                    # búsqueda completa
+    python yeast_nn.py --local yeast.data # si descargaste el archivo a mano
+"""
 import argparse
 import copy
 import itertools
@@ -25,8 +38,9 @@ BASE_CFG = dict(
     lr=0.01,
     weight_decay=0.0,    # regularización L2
     dropout=0.0,
+    batchnorm=False,     # BatchNorm1d entre la capa lineal y la activación
     epochs=300,          # máximo de épocas
-    batch_size=32,
+    batch_size=200,
     patience=30,         # parada temprana: épocas sin mejorar la pérdida de validación (None = sin parada)
     restore_best=True,   # al final, restaurar los pesos de la mejor época de validación
 )
@@ -54,13 +68,18 @@ ACTIVATIONS = {"relu": nn.ReLU, "tanh": nn.Tanh, "sigmoid": nn.Sigmoid,
                "leaky_relu": nn.LeakyReLU, "elu": nn.ELU}
 
 
+# ----------------------------------------------------------------------
 # Modelo y entrenamiento
-def build_model(n_in, n_out, n_layers, n_neurons, activation, dropout):
-    """MLP: n_in -> [Linear -> activación -> (Dropout)] x n_layers -> Linear(n_out).
+# ----------------------------------------------------------------------
+def build_model(n_in, n_out, n_layers, n_neurons, activation, dropout, batchnorm=False):
+    """MLP: n_in -> [Linear -> (BatchNorm) -> activación -> (Dropout)] x n_layers -> Linear(n_out).
     La última capa no lleva activación: CrossEntropyLoss ya aplica la softmax."""
     layers, d = [], n_in
     for _ in range(n_layers):
-        layers += [nn.Linear(d, n_neurons), ACTIVATIONS[activation]()]
+        layers.append(nn.Linear(d, n_neurons))
+        if batchnorm:
+            layers.append(nn.BatchNorm1d(n_neurons))
+        layers.append(ACTIVATIONS[activation]())
         if dropout > 0:
             layers.append(nn.Dropout(dropout))
         d = n_neurons
@@ -83,7 +102,7 @@ def train_model(data, cfg, seed):
     Xva, yva = data["val"]
 
     model = build_model(Xtr.shape[1], data["n_classes"], cfg["n_layers"], cfg["n_neurons"],
-                        cfg["activation"], cfg["dropout"])
+                        cfg["activation"], cfg["dropout"], cfg.get("batchnorm", False))
     opt = torch.optim.Adam(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
     criterion = nn.CrossEntropyLoss()
 
@@ -96,6 +115,8 @@ def train_model(data, cfg, seed):
         perm = torch.randperm(n)
         for s in range(0, n, cfg["batch_size"]):
             idx = perm[s:s + cfg["batch_size"]]
+            if len(idx) < 2:      # BatchNorm no admite lotes de una sola muestra
+                continue
             opt.zero_grad()
             criterion(model(Xtr[idx]), ytr[idx]).backward()
             opt.step()
@@ -132,7 +153,9 @@ def evaluate_config(data, cfg, seeds):
                 segundos=time.time() - t0)
 
 
+# ----------------------------------------------------------------------
 # Etapa 1: búsqueda en rejilla
+# ----------------------------------------------------------------------
 def grid_search(data, grid, seeds):
     keys = list(grid)
     combos = list(itertools.product(*grid.values()))
@@ -156,7 +179,9 @@ def grid_search(data, grid, seeds):
     return best_cfg
 
 
+# ----------------------------------------------------------------------
 # Etapa 2: sensibilidad a un hiperparámetro a la vez
+# ----------------------------------------------------------------------
 def sensitivity(data, best_cfg, sweeps, seeds):
     rows = []
     print("\n=== Sensibilidad (un hiperparámetro a la vez, el resto = mejor configuración) ===")
@@ -176,7 +201,9 @@ def sensitivity(data, best_cfg, sweeps, seeds):
     return df
 
 
+# ----------------------------------------------------------------------
 # Etapa 3: evaluación final en prueba
+# ----------------------------------------------------------------------
 def final_evaluation(data, cfg, seeds):
     print("\n=== Evaluación final en el conjunto de PRUEBA ===")
     print("Configuración elegida:", json.dumps(cfg))
@@ -242,6 +269,7 @@ def plot_results(hist, best_ep, y_true, pred, classes):
     plt.savefig("yeast_confusion.png", dpi=150, bbox_inches="tight"); plt.show()
 
 
+# ----------------------------------------------------------------------
 def to_tensors(d):
     def t(X, y):
         return torch.tensor(X, dtype=torch.float32), torch.tensor(y, dtype=torch.long)
