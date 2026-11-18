@@ -40,7 +40,7 @@ BASE_CFG = dict(
     dropout=0.0,
     batchnorm=False,     # BatchNorm1d entre la capa lineal y la activación
     epochs=300,          # máximo de épocas
-    batch_size=200,
+    batch_size=35,
     patience=30,         # parada temprana: épocas sin mejorar la pérdida de validación (None = sin parada)
     restore_best=True,   # al final, restaurar los pesos de la mejor época de validación
 )
